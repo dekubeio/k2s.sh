@@ -64,8 +64,9 @@
       </div>
       <div class="terminal-panel" data-panel="download">
         <span class="comment"># download, inspect, then run</span>
-        <div class="line"><span class="prompt">$ </span><span class="cmd">curl -fsSL k2s.dekube.io/get -o k2s</span></div>
-        <div class="line"><span class="prompt">$ </span><span class="cmd">chmod +x k2s && ./k2s</span></div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">curl -fsSL -o k2s.sh \</span></div>
+        <div class="line"><span class="cmd">    github.com/dekubeio/kubernetes2simple/releases/latest/download/kubernetes2simple.sh</span></div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">chmod +x k2s.sh && ./k2s.sh</span></div>
         <div class="line"><span class="prompt">$ </span><span class="cmd">docker compose up -d</span></div>
       </div>
     </div>
@@ -87,7 +88,7 @@
     <h3>Can I run it again?</h3>
     <p>Yes, any time. <code>compose.yml</code> and <code>Caddyfile</code>
     are regenerated on every run. To customize something, edit
-    <code>helmfile2compose.yaml</code> instead &mdash; that file is yours.</p>
+    <code>dekube.yaml</code> instead &mdash; that file is yours.</p>
   </div>
 
   <div class="faq-item">
