@@ -1,0 +1,13 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="20" fill="#fcfcfb"/>
+  <!-- k2s logo: clean 3-spoke wheel, friendly -->
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#16a34a" stroke-width="1.5" opacity="0.25"/>
+  <line x1="50" y1="50" x2="50" y2="14" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="50" cy="12" r="5.5" fill="#fcfcfb" stroke="#16a34a" stroke-width="2"/>
+  <line x1="50" y1="50" x2="81" y2="68" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="83" cy="69.5" r="5.5" fill="#fcfcfb" stroke="#16a34a" stroke-width="2"/>
+  <line x1="50" y1="50" x2="19" y2="68" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="17" cy="69.5" r="5.5" fill="#fcfcfb" stroke="#16a34a" stroke-width="2"/>
+  <circle cx="50" cy="50" r="12" fill="#fcfcfb" stroke="#16a34a" stroke-width="2"/>
+  <circle cx="50" cy="50" r="4" fill="#16a34a"/>
+</svg>
