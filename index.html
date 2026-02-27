@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>kubernetes2simple (k2s.sh) — Kubernetes made too simple by removing Kubernetes</title>
+<title>kubernetes2simple (k2s.dekube.io) — Kubernetes made too simple by removing Kubernetes</title>
 <meta name="description" content="kubernetes2simple — Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
 <meta name="keywords" content="kubernetes2simple, k2s, kubernetes, docker compose, helmfile, conversion, devops, dekube">
-<meta property="og:title" content="kubernetes2simple (k2s.sh) — Kubernetes made too simple">
+<meta property="og:title" content="kubernetes2simple (k2s.dekube.io) — Kubernetes made too simple">
 <meta property="og:description" content="Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://k2s.sh">
+<meta property="og:url" content="https://k2s.dekube.io">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kubernetes2simple (k2s.sh) — Kubernetes made too simple">
+<meta name="twitter:title" content="kubernetes2simple (k2s.dekube.io) — Kubernetes made too simple">
 <meta name="twitter:description" content="Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
 <link rel="stylesheet" href="k2s.css">
 </head>
@@ -19,7 +19,7 @@
 
 <header>
   <span class="wordmark">
-    <a class="wordmark-name" href="#">k2s<span class="dot">.</span>sh</a><span class="sep">&mdash;</span><span class="tagline">Kubernetes made too simple by removing Kubernetes</span>
+    <a class="wordmark-name" href="#">k2s<span class="dot">.</span>dekube<span class="dot">.</span>io</a><span class="sep">&mdash;</span><span class="tagline">Kubernetes made too simple by removing Kubernetes</span>
   </span>
 </header>
 
@@ -59,13 +59,13 @@
     <div class="terminal-body">
       <div class="terminal-panel active" data-panel="curl">
         <span class="comment"># in your project directory</span>
-        <div class="line"><span class="prompt">$ </span><span class="cmd">curl -fsSL k2s.sh/get | bash</span></div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">curl -fsSL k2s.dekube.io/get | bash</span></div>
         <div class="line"><span class="prompt">$ </span><span class="cmd">docker compose up -d</span></div>
       </div>
       <div class="terminal-panel" data-panel="download">
         <span class="comment"># download, inspect, then run</span>
-        <div class="line"><span class="prompt">$ </span><span class="cmd">curl -fsSL k2s.sh/get -o k2s.sh</span></div>
-        <div class="line"><span class="prompt">$ </span><span class="cmd">chmod +x k2s.sh && ./k2s.sh</span></div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">curl -fsSL k2s.dekube.io/get -o k2s</span></div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">chmod +x k2s && ./k2s</span></div>
         <div class="line"><span class="prompt">$ </span><span class="cmd">docker compose up -d</span></div>
       </div>
     </div>
@@ -119,37 +119,40 @@
     <h3>Is this K2s?</h3>
     <p>No. <a href="https://github.com/Siemens-Healthineers/K2s">K2s</a> (uppercase K)
     is a Kubernetes distribution for Windows by Siemens Healthineers.
-    k2s.sh (lowercase) is this project. Different thing, similar name, no affiliation.</p>
+    k2s (lowercase) is this project. Different thing, similar name, no affiliation.</p>
   </div>
 
   <div class="faq-item">
     <h3>How does it work?</h3>
-    <p>You don't want to know. But if you insist, keep scrolling.</p>
+    <p>The script downloads the conversion engine and the extensions your
+    project needs, runs <code>helmfile template</code> (or reads your
+    manifests), and converts everything to a <code>compose.yml</code> +
+    reverse proxy config. The conversion is static &mdash; no agent, no
+    daemon, no controller. Run it again any time to regenerate.</p>
   </div>
-</div>
 
-<div class="spacer">
-  <p>Yep, keep scrolling. Be sure you want to know.</p>
+  <div class="faq-item">
+    <h3>What is dekube?</h3>
+    <p><a href="https://dekube.io">dekube</a> is the conversion engine
+    behind this script &mdash; an extension system, a package manager, and
+    documentation written as forbidden texts for a forbidden act.
+    kubernetes2simple detects your project, picks the right extensions,
+    and runs dekube for you. One command instead of understanding the
+    architecture.</p>
+  </div>
 </div>
 
 <footer>
-  <p>
-    kubernetes2simple is the turnkey face of
-    <a href="https://dekube.io">dekube</a> &mdash;
-    which is a conversion engine with an extension system, its own package manager,
-    a fake API server, and the documentation is written as forbidden texts for a forbidden act.
-  </p>
-    <p>This is your last chance to turn around and claim ignorance.</p>
-  </p>
-  <p>Still here?</p>
   <div class="links">
     <a href="https://github.com/dekubeio/kubernetes2simple">Source</a>
     <span class="sep">&middot;</span>
+    <a href="https://dekube.io">dekube</a>
+    <span class="sep">&middot;</span>
     <a href="https://docs.dekube.io">Documentation</a>
     <span class="sep">&middot;</span>
-    <a href="https://github.com/dekubeio/dekube-engine">Engine</a>
+    <a href="https://helmfile2compose.dekube.io">helmfile2compose</a>
   </div>
-  <p class="copyright">&copy; k2s is part of the <a href="https://dekube.io">dekube</a> project</p>
+  <p class="copyright">&copy; <a href="https://dekube.io">dekube</a> project</p>
 </footer>
 
 <script src="https://dekube.io/tabs.js"></script>
