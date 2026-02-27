@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kubernetes2simple (k2s.sh) — Kubernetes made too simple by removing Kubernetes</title>
+<meta name="description" content="kubernetes2simple — Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
+<meta name="keywords" content="kubernetes2simple, k2s, kubernetes, docker compose, helmfile, conversion, devops, dekube">
+<meta property="og:title" content="kubernetes2simple (k2s.sh) — Kubernetes made too simple">
+<meta property="og:description" content="Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://k2s.sh">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes2simple (k2s.sh) — Kubernetes made too simple">
+<meta name="twitter:description" content="Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
+<link rel="stylesheet" href="k2s.css">
+</head>
+<body>
+
+<header>
+  <span class="wordmark">
+    <a class="wordmark-name" href="#">k2s<span class="dot">.</span>sh</a><span class="sep">&mdash;</span><span class="tagline">Kubernetes made too simple by removing Kubernetes</span>
+  </span>
+</header>
+
+<div class="hero">
+  <!-- Logo: simplified K8s wheel — 3 soft spokes, friendly -->
+  <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle class="rim" cx="50" cy="50" r="42"/>
+
+    <!-- 3 spokes at 120° intervals, with rounded tips -->
+    <line class="spoke" x1="50" y1="50" x2="50" y2="14"/>
+    <circle class="tip" cx="50" cy="12" r="5.5"/>
+
+    <line class="spoke" x1="50" y1="50" x2="81" y2="68"/>
+    <circle class="tip" cx="83" cy="69.5" r="5.5"/>
+
+    <line class="spoke" x1="50" y1="50" x2="19" y2="68"/>
+    <circle class="tip" cx="17" cy="69.5" r="5.5"/>
+
+    <!-- hub -->
+    <circle class="hub" cx="50" cy="50" r="12"/>
+    <circle class="hub-dot" cx="50" cy="50" r="4"/>
+  </svg>
+
+  <h1>kubernetes2simple</h1>
+  <p class="subtitle">Kubernetes to docker compose. One command. Too simple.</p>
+
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot r"></div>
+      <div class="terminal-dot y"></div>
+      <div class="terminal-dot g"></div>
+    </div>
+    <div class="terminal-tabs">
+      <button class="terminal-tab active" data-tab="curl">curl | bash</button>
+      <button class="terminal-tab" data-tab="download">download</button>
+    </div>
+    <div class="terminal-body">
+      <div class="terminal-panel active" data-panel="curl">
+        <span class="comment"># in your project directory</span>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">curl -fsSL k2s.sh/get | bash</span></div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">docker compose up -d</span></div>
+      </div>
+      <div class="terminal-panel" data-panel="download">
+        <span class="comment"># download, inspect, then run</span>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">curl -fsSL k2s.sh/get -o k2s.sh</span></div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">chmod +x k2s.sh && ./k2s.sh</span></div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">docker compose up -d</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint">Python 3.10+ and Docker required. That's all.</p>
+
+  <div class="explainer">
+    <strong>What happened?</strong> The script looked at your project, figured
+    out what it is, downloaded what it needed, and produced a working
+    <code>compose.yml</code>. Everything it installed lives in
+    <code>.kubernetes2simple/</code> &mdash; your system stays clean.
+  </div>
+</div>
+
+<div class="faq">
+  <h2>Questions</h2>
+
+  <div class="faq-item">
+    <h3>Can I run it again?</h3>
+    <p>Yes, any time. <code>compose.yml</code> and <code>Caddyfile</code>
+    are regenerated on every run. To customize something, edit
+    <code>helmfile2compose.yaml</code> instead &mdash; that file is yours.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>What about TLS?</h3>
+    <p>If your project uses cert-manager, self-signed certificates are generated
+    locally so things can start. Fine for development &mdash; not for production.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>What doesn't convert?</h3>
+    <p>CronJobs, resource limits, probes, HPA &mdash; anything without a compose
+    equivalent is skipped with a warning. The goal is a working local environment,
+    not a cluster replica.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>My project uses Helmfile environments</h3>
+    <p>Pass <code>--env &lt;name&gt;</code> to select one. Pick the environment
+    closest to dev or demo.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>It didn't work</h3>
+    <p><a href="https://github.com/dekubeio/kubernetes2simple/issues">Open an issue.</a>
+    Describe what you pointed it at, paste the output.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>Is this K2s?</h3>
+    <p>No. <a href="https://github.com/Siemens-Healthineers/K2s">K2s</a> (uppercase K)
+    is a Kubernetes distribution for Windows by Siemens Healthineers.
+    k2s.sh (lowercase) is this project. Different thing, similar name, no affiliation.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>How does it work?</h3>
+    <p>You don't want to know. But if you insist, keep scrolling.</p>
+  </div>
+</div>
+
+<div class="spacer">
+  <p>Yep, keep scrolling. Be sure you want to know.</p>
+</div>
+
+<footer>
+  <p>
+    kubernetes2simple is the turnkey face of
+    <a href="https://dekube.io">dekube</a> &mdash;
+    which is a conversion engine with an extension system, its own package manager,
+    a fake API server, and the documentation is written as forbidden texts for a forbidden act.
+  </p>
+    <p>This is your last chance to turn around and claim ignorance.</p>
+  </p>
+  <p>Still here?</p>
+  <div class="links">
+    <a href="https://github.com/dekubeio/kubernetes2simple">Source</a>
+    <span class="sep">&middot;</span>
+    <a href="https://docs.dekube.io">Documentation</a>
+    <span class="sep">&middot;</span>
+    <a href="https://github.com/dekubeio/dekube-engine">Engine</a>
+  </div>
+  <p class="copyright">&copy; k2s is part of the <a href="https://dekube.io">dekube</a> project</p>
+</footer>
+
+<script src="https://dekube.io/tabs.js"></script>
+<script src="k2s.js"></script>
+
+</body>
+</html>
