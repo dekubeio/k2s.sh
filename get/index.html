@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 echo "Downloading kubernetes2simple..."
-curl -fsSL "https://github.com/dekubeio/kubernetes2simple/releases/latest/download/kubernetes2simple.sh" -o kubernetes2simple.sh
+curl -fsSL "https://raw.githubusercontent.com/dekubeio/kubernetes2simple/main/kubernetes2simple.sh" -o kubernetes2simple.sh
 chmod +x kubernetes2simple.sh
 echo "Done. Run: ./kubernetes2simple.sh"
 ./kubernetes2simple.sh "$@"
