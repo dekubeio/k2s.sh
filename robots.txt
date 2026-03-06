@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://k2s.dekube.io/sitemap.xml

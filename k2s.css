@@ -317,6 +317,31 @@ footer .copyright a {
   color: var(--fg-secondary);
 }
 
+/* --- guides links --- */
+.guides-links {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 0 2rem 3rem;
+}
+.guides-links h2 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-tertiary);
+  margin-bottom: 1rem;
+}
+.guides-links a {
+  display: block;
+  padding: 0.65rem 0;
+  color: var(--blue);
+  text-decoration: none;
+  font-size: 0.92rem;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.15s;
+}
+.guides-links a:first-of-type { border-top: 1px solid var(--border); }
+.guides-links a:hover { color: var(--fg); }
 /* --- animations --- */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }

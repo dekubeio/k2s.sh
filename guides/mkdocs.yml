@@ -1,0 +1,52 @@
+site_name: kubernetes2simple — Guides
+site_url: https://k2s.dekube.io/guides/
+site_description: "Convert Kubernetes manifests, Helm charts, and helmfiles to Docker Compose. Practical guides and tutorials."
+repo_url: https://github.com/dekubeio/kubernetes2simple
+repo_name: dekubeio/kubernetes2simple
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: green
+      accent: green
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: green
+      accent: green
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  logo: https://k2s.dekube.io/logo.svg
+  favicon: https://k2s.dekube.io/logo.svg
+  features:
+    - content.code.copy
+    - search.suggest
+
+nav:
+  - Kubernetes to Docker Compose: kubernetes-to-docker-compose.md
+  - Helm chart to Docker Compose: helm-chart-to-docker-compose.md
+  - Local development with Docker Compose: local-kubernetes-development-docker-compose.md
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/dekubeio
+
+copyright: Part of the <a href="https://dekube.io">dekube</a> project. <a href="https://k2s.dekube.io">Back to kubernetes2simple</a>.

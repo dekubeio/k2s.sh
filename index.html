@@ -3,20 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>kubernetes2simple (k2s.dekube.io) — Kubernetes made too simple by removing Kubernetes</title>
-<meta name="description" content="kubernetes2simple — Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
-<meta name="keywords" content="kubernetes2simple, k2s, kubernetes, docker compose, helmfile, conversion, devops, dekube">
-<meta property="og:title" content="kubernetes2simple (k2s.dekube.io) — Kubernetes made too simple">
-<meta property="og:description" content="Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
+<title>kubernetes2simple (k2s) — Kubernetes to Docker Compose in One Command</title>
+<meta name="description" content="Convert Kubernetes manifests, Helm charts, and helmfiles to a working compose.yml in one command. No cluster needed. Just curl, run, docker compose up.">
+<meta name="keywords" content="kubernetes to docker compose, convert kubernetes to docker compose, helm to docker compose, helmfile to docker compose, k8s to compose, kubernetes local development, run kubernetes locally, kubernetes2simple, dekube">
+<link rel="canonical" href="https://k2s.dekube.io/">
+<meta property="og:title" content="kubernetes2simple (k2s) — Kubernetes made too simple">
+<meta property="og:description" content="Convert Kubernetes manifests, Helm charts, and helmfiles to compose.yml. One command. No cluster needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://k2s.dekube.io">
 <meta property="og:image" content="https://k2s.dekube.io/logo.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="kubernetes2simple (k2s.dekube.io) — Kubernetes made too simple">
-<meta name="twitter:description" content="Kubernetes to docker compose in one command. curl it, run it, done. Too simple.">
+<meta name="twitter:title" content="kubernetes2simple (k2s) — Kubernetes made too simple">
+<meta name="twitter:description" content="Convert Kubernetes manifests, Helm charts, and helmfiles to compose.yml. One command. No cluster needed.">
 <meta name="twitter:image" content="https://k2s.dekube.io/logo.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "kubernetes2simple",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Linux, macOS, Windows",
+  "description": "Convert Kubernetes manifests, Helm charts, and helmfiles to a working Docker Compose setup in one command.",
+  "url": "https://k2s.dekube.io",
+  "downloadUrl": "https://github.com/dekubeio/kubernetes2simple/releases/latest",
+  "softwareRequirements": "Python 3.10+, Docker",
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "dekube", "url": "https://github.com/dekubeio" }
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="/logo.svg">
 <link rel="stylesheet" href="k2s.css">
 </head>
@@ -49,7 +66,7 @@
   </svg>
 
   <h1>kubernetes2simple</h1>
-  <p class="subtitle">Kubernetes to docker compose. One command. Too simple.</p>
+  <p class="subtitle">Kubernetes to Docker Compose. One command. Too simple.</p>
 
   <div class="terminal">
     <div class="terminal-bar">
@@ -80,10 +97,19 @@
 
   <div class="explainer">
     <strong>What happened?</strong> The script looked at your project, figured
-    out what it is, downloaded what it needed, and produced a working
-    <code>compose.yml</code>. Everything it installed lives in
+    out what it is (helmfile, Helm chart, or raw manifests), downloaded
+    what it needed, and produced a working <code>compose.yml</code> +
+    <code>Caddyfile</code>. Everything it installed lives in
     <code>.kubernetes2simple/</code> &mdash; your system stays clean.
+    Re-run it any time to regenerate.
   </div>
+</div>
+
+<div class="guides-links">
+  <h2>Guides</h2>
+  <a href="/guides/kubernetes-to-docker-compose/">How to convert Kubernetes manifests to Docker Compose</a>
+  <a href="/guides/helm-chart-to-docker-compose/">How to convert a Helm chart to Docker Compose</a>
+  <a href="/guides/local-kubernetes-development-docker-compose/">Local Kubernetes development with Docker Compose</a>
 </div>
 
 <div class="faq">
@@ -123,19 +149,17 @@
   </div>
 
   <div class="faq-item">
+    <h3>I want more control</h3>
+    <p><a href="https://helmfile2compose.dekube.io/docs/getting-started/">helmfile2compose</a>
+    is the distribution for maintainers &mdash; choose your extensions,
+    control the pipeline, embed it in your CI. It comes with warnings.</p>
+  </div>
+
+  <div class="faq-item">
     <h3>Is this K2s?</h3>
     <p>No. <a href="https://github.com/Siemens-Healthineers/K2s">K2s</a> (uppercase K)
     is a Kubernetes distribution for Windows by Siemens Healthineers.
     k2s (lowercase) is this project. Different thing, similar name, no affiliation.</p>
-  </div>
-
-  <div class="faq-item">
-    <h3>How does it work?</h3>
-    <p>The script downloads the conversion engine and the extensions your
-    project needs, runs <code>helmfile template</code> (or reads your
-    manifests), and converts everything to a <code>compose.yml</code> +
-    reverse proxy config. The conversion is static &mdash; no agent, no
-    daemon, no controller. Run it again any time to regenerate.</p>
   </div>
 
   <div class="faq-item">
