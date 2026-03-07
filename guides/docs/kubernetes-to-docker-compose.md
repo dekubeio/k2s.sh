@@ -1,15 +1,12 @@
 # How to convert Kubernetes manifests to Docker Compose
 
-*You probably shouldn't need this page.*
+For the record: you should probably just run Kubernetes. On Linux, k3s is [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1). On macOS or Windows, Docker Desktop has an "Enable Kubernetes" checkbox. Your manifests work as-is.
 
-Technically, you should just run Kubernetes. On Linux, k3s is [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1) and runs on a Raspberry Pi. On macOS or Windows, Docker Desktop has a "Enable Kubernetes" checkbox — one click, done. Your manifests work as-is. No conversion, no translation, no drift.
+But you're here, so one of these is true:
 
-But let's be honest about why you're here. Most people self-hosting an app don't want to learn Kubernetes. They want to add something to their TrueNAS, their Synology, their VPS — the same way they added Plex or Immich. Compose is what they know, it's what their platform supports, and k8s is not a hill they're willing to die on just to run a chat server in a closet.
-
-That's the real reason this tool exists. There are other valid ones:
-
-- **You can't be root.** Corporate policy says Podman rootless, no sudo, no systemd services. k3s isn't happening. If this is you — genuine sympathy. Compose is what you've got.
-- **Your platform only speaks Compose.** Some NAS interfaces, some cloud providers, some hosting panels — they give you a Compose field and nothing else.
+- **You don't want to learn Kubernetes.** You want to add an app to your NAS or VPS the same way you added Plex or Immich — paste a compose file, done. I'm not saying I agree, but this is the reason this project exists.
+- **You can't be root.** Corporate policy says Podman rootless, no sudo, no systemd. k3s needs root. Compose is what you've got.
+- **Your platform only speaks Compose.** Your Synology, your TrueNAS, your hosting panel — it has a Compose field and nothing else.
 
 Either way — read on.
 
@@ -28,7 +25,7 @@ All downloaded tools go into `.kubernetes2simple/`. Your system stays clean. You
 
 **Hostnames** — Ingress hostnames end up in the Caddy reverse proxy config. Make sure they resolve locally (`*.localhost` works on most systems, or add `/etc/hosts` entries).
 
-**Secrets** — If a secret wasn't in the rendered output, a `changeme` placeholder is inserted. Check `compose.yml` and fill in real values.
+**Secrets** — If a Secret wasn't in the rendered output, env vars that reference it are skipped (with a warning). Add missing values in `dekube.yaml` under `overrides:`, not in `compose.yml`.
 
 **Volume paths** — Persistent storage becomes bind mounts under `./data/`. Customize in `dekube.yaml` — the script reads it but never overwrites it.
 

@@ -1,19 +1,10 @@
 # Local Kubernetes development with Docker Compose
 
-*You probably don't need this page either.*
+This guide is for developers who need to run a Kubernetes stack locally but don't maintain it themselves — someone else owns the helmfile, and you just need the thing running on your laptop.
 
-The honest version: if you're doing local development against a Kubernetes stack, just run Kubernetes. On Linux, [k3s](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1) is one script and takes 30 seconds. On macOS or Windows, Docker Desktop has a "Enable Kubernetes" checkbox. Both use less RAM than your IDE. Your Helm charts work without conversion. `kubectl port-forward` isn't that scary.
+If that's you: **send this page to whoever maintains the helmfile.** They should look at [helmfile2compose getting started](https://helmfile2compose.dekube.io/docs/getting-started/) and set up a proper `dekube.yaml` for the project. A maintainer who understands the stack will have a much easier time tuning the conversion than you will fighting it blind. kubernetes2simple can get you started, but edge cases are inevitable on a real stack — and debugging them requires knowing what the Helm charts actually do.
 
-The "minikube is too heavy" argument died when k3s came out. The "I'm not on Linux" argument died when Docker Desktop added a checkbox.
-
-So why does this page exist? Because most people don't *want* to learn Kubernetes. They know `docker compose up`, it works, and learning k8s just to start an app on their laptop feels like being asked to get a pilot's license to drive to the grocery store.
-
-That's the same reason kubernetes2simple exists in general — people self-hosting an app on their NAS or VPS want to paste a compose file and move on, the same way they do for Plex or Immich. For local dev, the dynamic is the same: designers, frontend devs, QA — they need to run the stack. They won't learn `kubectl`. Compose gives them a workflow they already understand.
-
-Other reasons you'd end up here:
-
-- **You can't be root.** Corporate laptop, Podman rootless, no sudo, no systemd. k3s needs root. If this is your life — we're sorry. Compose is what you've got.
-- **Your platform only speaks Compose.** GitHub Codespaces, some cloud dev environments, certain CI setups — Compose works everywhere Docker runs. k3s doesn't.
+That said, here's how to get going right now.
 
 ## Two commands
 
@@ -36,7 +27,9 @@ docker compose down           # tear down
 
 ## Hot reload
 
-Mount your source code via a `compose.override.yml` alongside the generated `compose.yml`:
+This is where the compose approach genuinely shines. You can mount local code into a Kubernetes pod too — but it means `hostPath` volumes, Helm value toggles, conditionals in your templates, and a helmfile that now has to care about your laptop. With compose, it's a file that doesn't touch anything else.
+
+Create a `compose.override.yml` alongside the generated `compose.yml`:
 
 ```yaml
 # compose.override.yml — yours, never overwritten
@@ -48,14 +41,14 @@ services:
       DEBUG: "true"
 ```
 
-Docker Compose merges both files automatically. When you re-run the conversion, `compose.override.yml` is untouched.
+Docker Compose merges both files automatically. Your code runs inside the full stack — same databases, same queues, same reverse proxy — with changes reflected immediately. When you re-run the conversion, `compose.override.yml` is untouched.
 
 ## Re-generating after changes
 
 When your Helm charts or manifests change, re-run the script:
 
 ```bash
-./k2s.sh --env dev
+./kubernetes2simple.sh --env dev
 docker compose up -d
 ```
 
