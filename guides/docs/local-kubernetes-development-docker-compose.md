@@ -2,9 +2,9 @@
 
 *You probably don't need this page either.*
 
-The honest version: if you're doing local development against a Kubernetes stack, [install k3s](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1). It's one script, it takes 30 seconds, it uses less RAM than your IDE, and your Helm charts work without conversion. `kubectl port-forward` isn't that scary.
+The honest version: if you're doing local development against a Kubernetes stack, just run Kubernetes. On Linux, [k3s](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1) is one script and takes 30 seconds. On macOS or Windows, Docker Desktop has a "Enable Kubernetes" checkbox. Both use less RAM than your IDE. Your Helm charts work without conversion. `kubectl port-forward` isn't that scary.
 
-The "minikube is too heavy" argument died when k3s came out. The "Kubernetes is too complex for local dev" argument died when k3s made it a single binary with zero configuration.
+The "minikube is too heavy" argument died when k3s came out. The "I'm not on Linux" argument died when Docker Desktop added a checkbox.
 
 So why does this page exist? Because most people don't *want* to learn Kubernetes. They know `docker compose up`, it works, and learning k8s just to start an app on their laptop feels like being asked to get a pilot's license to drive to the grocery store.
 

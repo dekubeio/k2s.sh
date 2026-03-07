@@ -2,7 +2,7 @@
 
 *You probably shouldn't need this page.*
 
-Technically, if you can install k3s — and on any Linux machine, [that's one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1) — you should just run Kubernetes. k3s is lighter than most people think, it runs on a Raspberry Pi, and your manifests work as-is. No conversion, no translation, no drift.
+Technically, you should just run Kubernetes. On Linux, k3s is [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1) and runs on a Raspberry Pi. On macOS or Windows, Docker Desktop has a "Enable Kubernetes" checkbox — one click, done. Your manifests work as-is. No conversion, no translation, no drift.
 
 But let's be honest about why you're here. Most people self-hosting an app don't want to learn Kubernetes. They want to add something to their TrueNAS, their Synology, their VPS — the same way they added Plex or Immich. Compose is what they know, it's what their platform supports, and k8s is not a hill they're willing to die on just to run a chat server in a closet.
 

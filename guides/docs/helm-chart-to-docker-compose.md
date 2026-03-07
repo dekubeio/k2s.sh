@@ -2,7 +2,7 @@
 
 *Kubernetes made simple by removing Kubernetes.*
 
-Let's get this out of the way: if you can run k3s, you should. On any Linux machine it's [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1), it runs on a Raspberry Pi, and your Helm charts just work — `helm install` and you're done. No conversion needed.
+Let's get this out of the way: you should just run Kubernetes. On Linux, k3s is [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1) and runs on a Raspberry Pi. On macOS or Windows, Docker Desktop has a "Enable Kubernetes" checkbox. Either way — `helm install` and you're done. No conversion needed.
 
 But most people self-hosting don't want to learn Kubernetes. They want to add an app to their NAS or their VPS the same way they added Plex or Immich — paste a compose file, click deploy, move on with their life. Setting up a k8s cluster, even k3s, is beyond what they're willing to do to run a chat server in a closet. And that's the real reason this tool exists.
 
