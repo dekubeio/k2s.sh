@@ -2,54 +2,39 @@
 
 *Kubernetes made simple by removing Kubernetes.*
 
-You have Helm charts (or a helmfile managing several). You don't want to deal with Kubernetes — maybe you find it overkill for your setup, maybe you just prefer Docker Compose, or maybe someone else maintains the charts and you just need the thing to run. The usual options: maintain a separate `compose.yml` by hand (it will drift), run a local cluster with minikube/kind/k3d (heavyweight), or convert automatically.
+Let's get this out of the way: if you can run k3s, you should. On any Linux machine it's [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1), it runs on a Raspberry Pi, and your Helm charts just work — `helm install` and you're done. No conversion needed.
 
-kubernetes2simple takes the third approach — the Helm chart stays the source of truth, the Compose file is a generated artifact.
+But most people self-hosting don't want to learn Kubernetes. They want to add an app to their NAS or their VPS the same way they added Plex or Immich — paste a compose file, click deploy, move on with their life. Setting up a k8s cluster, even k3s, is beyond what they're willing to do to run a chat server in a closet. And that's the real reason this tool exists.
 
-## One script, automatic detection
+There are other valid reasons too:
 
-kubernetes2simple is a shell script. Drop it in your project directory and run it:
+- **No root access** — corporate policy says Podman rootless, no sudo, no systemd services. k3s needs root. You're stuck with what you have, and you have our sympathy.
+- **Your platform only speaks Compose** — your Synology, Unraid, or hosting panel has a "paste your compose.yml here" box and nothing else. Kubernetes isn't on the menu.
+
+If that's your situation, kubernetes2simple converts the chart for you. The Helm chart stays the source of truth, the Compose file is a generated artifact.
+
+## Two commands
 
 ```bash
 curl -fsSL k2s.dekube.io/get | bash
 docker compose up -d
 ```
 
-The script reads your directory and detects the project type:
+The script detects what's in your directory — a helmfile, a Helm chart, or raw Kubernetes manifests — and does the right thing. It downloads helm and helmfile if you don't have them. Everything goes into `.kubernetes2simple/`. Your system stays clean.
 
-- **`helmfile.yaml` found?** → helmfile project. Downloads helm + helmfile if missing, runs `helmfile template`, converts.
-- **`Chart.yaml` found?** → Helm chart. Downloads helm if missing, builds dependencies, runs `helm template`, converts.
-- **Raw `*.yaml` with `kind:` fields?** → Kubernetes manifests. Converts directly.
-
-All downloaded tools go into `.kubernetes2simple/`. Your system stays clean.
-
-### Helmfile environments
-
-If your helmfile project uses environments, pass one:
+If your helmfile uses environments, pass one:
 
 ```bash
 ./k2s.sh --env dev
 ```
 
-If you don't pass `--env`, the script warns you and asks to confirm — helmfile projects usually need one.
-
-## What the conversion handles
-
-**Subcharts** — Bitnami PostgreSQL, Redis, Keycloak as dependencies? Everything renders into separate manifests. All converted. Bitnami-specific quirks (sentinel mode, replication flags, admin credentials) are handled by a bundled transform.
-
-**CRDs** — cert-manager Certificates, Keycloak realms, ServiceMonitors are all handled by bundled extensions. No configuration needed — kubernetes2simple includes everything.
-
-**Conditional `null` values** — Helm's `{{ if }}` blocks can render disabled fields as `null` instead of omitting them. Handled correctly.
-
-**Init containers** — become separate compose services with `restart: on-failure`. They run concurrently in Compose (not sequentially like in K8s). Everything converges, but expect noisy logs on first boot.
-
-## Common gotchas
+## Things to check after conversion
 
 **Hostnames** — Ingress hostnames end up in the Caddy reverse proxy config. Make sure they resolve locally (`*.localhost` works on most systems, or add `/etc/hosts` entries).
 
-**Secrets** — If a Secret wasn't in the rendered output, a `changeme` placeholder is inserted. Check `compose.yml` and fill in real values.
+**Secrets** — If a secret wasn't in the rendered output, a `changeme` placeholder is inserted. Check `compose.yml` and fill in real values.
 
-**Volume paths** — PVCs become bind mounts under `./data/`. Customize in `dekube.yaml` — the script reads it but never overwrites it.
+**Volume paths** — Persistent storage becomes bind mounts under `./data/`. Customize in `dekube.yaml` — the script reads it but never overwrites it.
 
 ## Re-running
 
@@ -63,7 +48,9 @@ docker compose up -d
 
 ## Want more control?
 
-kubernetes2simple decides everything for you — extensions, pipeline, configuration. If you need to choose which extensions to load, exclude specific workloads, customize the pipeline, or embed the conversion in your CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the distribution for maintainers.
+Curious about what happened to your Deployments, ConfigMaps, and Ingresses? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down resource by resource.
+
+kubernetes2simple decides everything for you. If you need to choose which extensions to load, exclude specific workloads, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the distribution for maintainers.
 
 ---
 

@@ -1,34 +1,21 @@
 # Local Kubernetes development with Docker Compose
 
-*Kubernetes? Too simple.*
+*You probably don't need this page either.*
 
-Someone on your team runs Kubernetes in production. You need a local dev environment but you don't want to learn Kubernetes just to start the app on your laptop. Or maybe you know Kubernetes fine and just don't think a local cluster should be necessary to run 15 containers. Either way — the question is whether you need a local *cluster* or whether Docker Compose is enough.
+The honest version: if you're doing local development against a Kubernetes stack, [install k3s](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1). It's one script, it takes 30 seconds, it uses less RAM than your IDE, and your Helm charts work without conversion. `kubectl port-forward` isn't that scary.
 
-## The comparison
+The "minikube is too heavy" argument died when k3s came out. The "Kubernetes is too complex for local dev" argument died when k3s made it a single binary with zero configuration.
 
-| | minikube / kind / k3d | Docker Compose |
-|---|---|---|
-| **Startup** | 10-90 seconds | Seconds |
-| **RAM overhead** | 512 MB - 2+ GB | Minimal |
-| **K8s API** | Full | None |
-| **CRDs, operators** | Work | Handled by extensions |
-| **RBAC, network policies** | Work | Don't exist |
-| **Tooling** | kubectl, helm, port-forward | docker compose up/logs/exec |
-| **Who can use it** | People who know K8s | Anyone who knows Docker |
+So why does this page exist? Because most people don't *want* to learn Kubernetes. They know `docker compose up`, it works, and learning k8s just to start an app on their laptop feels like being asked to get a pilot's license to drive to the grocery store.
 
-## When Docker Compose is enough
+That's the same reason kubernetes2simple exists in general — people self-hosting an app on their NAS or VPS want to paste a compose file and move on, the same way they do for Plex or Immich. For local dev, the dynamic is the same: designers, frontend devs, QA — they need to run the stack. They won't learn `kubectl`. Compose gives them a workflow they already understand.
 
-Your application is a web app, an API, background workers, databases — things that listen on ports, read env vars, and talk to each other over DNS. You need fast iteration, your team includes people who don't know Kubernetes, and CI doesn't need a full cluster for integration tests.
+Other reasons you'd end up here:
 
-This covers most applications.
+- **You can't be root.** Corporate laptop, Podman rootless, no sudo, no systemd. k3s needs root. If this is your life — we're sorry. Compose is what you've got.
+- **Your platform only speaks Compose.** GitHub Codespaces, some cloud dev environments, certain CI setups — Compose works everywhere Docker runs. k3s doesn't.
 
-## When it isn't
-
-Your app talks to the Kubernetes API (controllers, operators, leader election). You need to test network policies, PDBs, rolling updates, scheduling. You're validating Helm chart changes or admission webhooks. These need a real cluster.
-
-## Getting started
-
-kubernetes2simple is a shell script. It detects your project type (helmfile, Helm chart, or raw manifests), downloads missing tools, and converts everything to Docker Compose:
+## Two commands
 
 ```bash
 curl -fsSL k2s.dekube.io/get | bash
@@ -37,23 +24,14 @@ docker compose up -d
 
 No global installs. Everything goes into `.kubernetes2simple/`. The script produces `compose.yml`, `Caddyfile`, and `dekube.yaml`.
 
-## Day-to-day workflow
+## Day-to-day
 
 ```bash
-# Start everything
-docker compose up -d
-
-# Follow logs
-docker compose logs -f myapp
-
-# Restart after a change
-docker compose restart myapp
-
-# Shell into a container
-docker compose exec myapp sh
-
-# Tear down
-docker compose down
+docker compose up -d          # start everything
+docker compose logs -f myapp  # follow logs
+docker compose restart myapp  # restart after a change
+docker compose exec myapp sh  # shell into a container
+docker compose down           # tear down
 ```
 
 ## Hot reload
@@ -70,13 +48,7 @@ services:
       DEBUG: "true"
 ```
 
-Docker Compose merges both files automatically. When you re-run the conversion, `compose.override.yml` is untouched. For frameworks with hot reload (Next.js, Flask, Spring Boot DevTools), this gives you live code reloading with no image rebuilds.
-
-## Accessing services
-
-**Ports** — container ports are mapped to your host automatically. Run `docker compose ps` to see what's where.
-
-**Domain routing** — Ingress resources become Caddy reverse proxy rules. Use `.localhost` domains (most systems resolve them to `127.0.0.1`) or add entries to `/etc/hosts`. Caddy handles TLS with an internal CA.
+Docker Compose merges both files automatically. When you re-run the conversion, `compose.override.yml` is untouched.
 
 ## Re-generating after changes
 
@@ -87,11 +59,13 @@ When your Helm charts or manifests change, re-run the script:
 docker compose up -d
 ```
 
-`dekube.yaml` customizations (volume paths, excludes, overrides) are preserved. Only `compose.yml` and `Caddyfile` are regenerated.
+`dekube.yaml` is preserved. Only `compose.yml` and `Caddyfile` are regenerated.
 
 ## Want more control?
 
-kubernetes2simple detects, downloads, and converts — you don't choose. If you need to pick extensions, exclude workloads, customize the reverse proxy, or embed the conversion in your project's CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the power-user distribution.
+Curious about what happened to your Deployments, ConfigMaps, and Ingresses? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down resource by resource.
+
+kubernetes2simple detects, downloads, and converts — you don't choose. If you need to pick extensions, exclude workloads, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the power-user distribution.
 
 ---
 

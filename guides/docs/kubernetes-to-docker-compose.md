@@ -1,137 +1,46 @@
 # How to convert Kubernetes manifests to Docker Compose
 
-*Kubernetes? Too simple.*
+*You probably shouldn't need this page.*
 
-You have Kubernetes manifests. You need `docker compose up`. Maybe you find Kubernetes too complicated. Maybe you love Docker Compose and don't see why you'd need anything else. Maybe someone handed you a helmfile and you just want containers that run. Maybe you hate Kubernetes — that's valid too.
+Technically, if you can install k3s — and on any Linux machine, [that's one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1) — you should just run Kubernetes. k3s is lighter than most people think, it runs on a Raspberry Pi, and your manifests work as-is. No conversion, no translation, no drift.
 
-Whatever the reason — converting Kubernetes manifests to Docker Compose by hand stops being viable at around three services.
+But let's be honest about why you're here. Most people self-hosting an app don't want to learn Kubernetes. They want to add something to their TrueNAS, their Synology, their VPS — the same way they added Plex or Immich. Compose is what they know, it's what their platform supports, and k8s is not a hill they're willing to die on just to run a chat server in a closet.
 
-## The problem
+That's the real reason this tool exists. There are other valid ones:
 
-A basic Deployment converts easily enough:
+- **You can't be root.** Corporate policy says Podman rootless, no sudo, no systemd services. k3s isn't happening. If this is you — genuine sympathy. Compose is what you've got.
+- **Your platform only speaks Compose.** Some NAS interfaces, some cloud providers, some hosting panels — they give you a Compose field and nothing else.
 
-```yaml
-# Kubernetes
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myapp
-spec:
-  template:
-    spec:
-      containers:
-        - name: myapp
-          image: myapp:1.2.0
-          ports:
-            - containerPort: 8080
-          env:
-            - name: DATABASE_URL
-              value: "postgres://db:5432/myapp"
-```
+Either way — read on.
 
-```yaml
-# Docker Compose
-services:
-  myapp:
-    image: myapp:1.2.0
-    ports:
-      - "8080:8080"
-    environment:
-      DATABASE_URL: "postgres://db:5432/myapp"
-```
+## Two commands
 
-But real stacks have ConfigMaps injected as env vars, Secrets mounted as files, init containers running migrations, PVCs, Ingress routing, sidecars sharing a network namespace, and CRDs managed by operators. Doing this by hand for 15+ services means maintaining two sources of truth — and they will drift.
-
-## Kubernetes made simple by removing Kubernetes
-
-kubernetes2simple is a shell script that looks at your project and figures out what to do. Drop it in a directory containing a `helmfile.yaml`, a `Chart.yaml`, or raw Kubernetes YAML files, and it handles the rest:
+kubernetes2simple is a shell script. Point it at a directory containing Kubernetes YAML files, a Helm chart, or a helmfile, and it handles everything — detecting the project type, downloading any missing tools, and converting:
 
 ```bash
 curl -fsSL k2s.dekube.io/get | bash
 docker compose up -d
 ```
 
-The script:
+All downloaded tools go into `.kubernetes2simple/`. Your system stays clean. You get a `compose.yml`, a `Caddyfile` for reverse proxying, and a `dekube.yaml` for customization.
 
-1. **Detects your project type** — helmfile project? Helm chart? Plain K8s manifests? It reads the directory and decides.
-2. **Bootstraps missing tools** — no helm installed? No helmfile? It downloads them into `.kubernetes2simple/bin/`. Your system stays clean.
-3. **Sets up a Python environment** — creates a venv if needed, installs pyyaml and cryptography. No pollution.
-4. **Renders your manifests** — runs `helmfile template`, `helm template`, or reads raw YAML, depending on what it detected.
-5. **Converts everything** — feeds the rendered output through the dekube conversion engine with all official extensions loaded.
+## Things to check after conversion
 
-Everything it downloads lives in `.kubernetes2simple/`. Delete the directory and it's gone.
+**Hostnames** — Ingress hostnames end up in the Caddy reverse proxy config. Make sure they resolve locally (`*.localhost` works on most systems, or add `/etc/hosts` entries).
 
-## What gets converted
+**Secrets** — If a secret wasn't in the rendered output, a `changeme` placeholder is inserted. Check `compose.yml` and fill in real values.
 
-| Kubernetes resource | Compose equivalent |
-|---|---|
-| Deployment, StatefulSet, DaemonSet | `services:` with image, env, command, volumes |
-| Job | `services:` with `restart: on-failure` |
-| ConfigMap, Secret | Inline environment variables + generated files |
-| Service | Network aliases (K8s FQDNs resolve via compose DNS) |
-| Ingress | Caddy reverse proxy with automatic TLS |
-| PVC | Host-path bind mounts or named volumes |
-| Init containers, sidecars | Separate compose services |
-| CRDs (cert-manager, Keycloak, etc.) | Handled automatically |
+**Volume paths** — Persistent storage becomes bind mounts under `./data/`. Customize in `dekube.yaml` — the script reads it but never overwrites it.
 
-HPA, RBAC, NetworkPolicy, CronJob — anything without a compose equivalent is skipped with a warning.
+## Re-running
 
-## Step-by-step example
-
-Given three Kubernetes files in a directory:
-
-```yaml
-# configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: myapp-config
-data:
-  APP_ENV: "production"
-  LOG_LEVEL: "info"
-```
-
-```yaml
-# deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myapp
-spec:
-  template:
-    spec:
-      containers:
-        - name: myapp
-          image: myapp:2.1.0
-          ports:
-            - containerPort: 8080
-          envFrom:
-            - configMapRef:
-                name: myapp-config
-```
-
-The script detects raw Kubernetes manifests, skips the helmfile/helm steps, and converts directly. The output:
-
-```yaml
-services:
-  myapp:
-    image: myapp:2.1.0
-    environment:
-      APP_ENV: "production"
-      LOG_LEVEL: "info"
-    networks:
-      default:
-        aliases:
-          - myapp.default.svc.cluster.local
-          - myapp.default.svc
-          - myapp.default
-```
-
-ConfigMap values inlined. Kubernetes FQDN aliases preserved. Replicas ignored — Compose runs one instance.
+The script is safe to re-run. `compose.yml` and `Caddyfile` are regenerated. `dekube.yaml` is preserved — your volume paths, excludes, and overrides survive.
 
 ## Want more control?
 
-kubernetes2simple detects, downloads, and converts — you don't choose. If you need to pick which extensions to load, exclude workloads, customize the reverse proxy, or embed the conversion in your project's CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the distribution for maintainers who want full control over the pipeline.
+Curious about what happened to your Deployments, ConfigMaps, and Ingresses? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down resource by resource.
+
+kubernetes2simple decides everything for you. If you need to pick which extensions to load, exclude workloads, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the distribution for people who want full control.
 
 ---
 
