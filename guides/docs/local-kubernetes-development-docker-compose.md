@@ -2,7 +2,7 @@
 
 This guide is for developers who need to run a Kubernetes stack locally but don't maintain it themselves — someone else owns the helmfile, and you just need the thing running on your laptop.
 
-If that's you: **send this page to whoever maintains the helmfile.** They should look at [helmfile2compose getting started](https://helmfile2compose.dekube.io/docs/getting-started/) and set up a proper `dekube.yaml` for the project. A maintainer who understands the stack will have a much easier time tuning the conversion than you will fighting it blind. kubernetes2simple can get you started, but edge cases are inevitable on a real stack — and debugging them requires knowing what the Helm charts actually do.
+If that's you: **send the [helmfile2compose getting started](https://helmfile2compose.dekube.io/docs/getting-started/) to whoever maintains the helmfile.** They should set up a proper `dekube.yaml` for the project. A maintainer who understands the stack will have a much easier time tuning the conversion than you will fighting it blind. kubernetes2simple can get you started, but edge cases are inevitable on a real stack — and debugging them requires knowing what the Helm charts actually do.
 
 That said, here's how to get going right now.
 
@@ -27,7 +27,7 @@ docker compose down           # tear down
 
 ## Hot reload
 
-This is where the compose approach genuinely shines. You can mount local code into a Kubernetes pod too — but it means `hostPath` volumes, Helm value toggles, conditionals in your templates, and a helmfile that now has to care about your laptop. With compose, it's a file that doesn't touch anything else.
+This is where the Compose approach genuinely shines. You can mount local code into a Kubernetes pod too — but it means hostPath volumes, Helm value overrides, conditionals in templates, and a helmfile that now has to care about your laptop. With Compose, it's one override file that doesn't touch anything else.
 
 Create a `compose.override.yml` alongside the generated `compose.yml`:
 
@@ -41,7 +41,7 @@ services:
       DEBUG: "true"
 ```
 
-Docker Compose merges both files automatically. Your code runs inside the full stack — same databases, same queues, same reverse proxy — with changes reflected immediately. When you re-run the conversion, `compose.override.yml` is untouched.
+Docker Compose merges both files automatically. Your code runs inside the full stack — same databases, same queues, same reverse proxy — with changes reflected immediately. When you re-run the conversion, `compose.override.yml` is yours and never overwritten.
 
 ## Re-generating after changes
 
@@ -56,9 +56,9 @@ docker compose up -d
 
 ## Want more control?
 
-Curious about what happened to your Deployments, ConfigMaps, and Ingresses? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down resource by resource.
+Want to understand what the script did with each part of your Kubernetes files? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down step by step.
 
-kubernetes2simple detects, downloads, and converts — you don't choose. If you need to pick extensions, exclude workloads, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the power-user distribution.
+kubernetes2simple detects, downloads, and converts — you don't choose. If you need to pick extensions, exclude services, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the power-user distribution.
 
 ---
 

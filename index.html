@@ -124,15 +124,15 @@
 
   <div class="faq-item">
     <h3>What about TLS?</h3>
-    <p>If your project uses cert-manager, self-signed certificates are generated
+    <p>If your project uses HTTPS, self-signed certificates are generated
     locally so things can start. Fine for development &mdash; not for production.</p>
   </div>
 
   <div class="faq-item">
     <h3>What doesn't convert?</h3>
-    <p>CronJobs, resource limits, probes, HPA &mdash; anything without a compose
-    equivalent is skipped with a warning. The goal is a working local environment,
-    not a cluster replica.</p>
+    <p>Anything without a Compose equivalent is skipped with a warning.
+    The goal is a working local environment, not a perfect replica of what
+    runs in production.</p>
   </div>
 
   <div class="faq-item">

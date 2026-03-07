@@ -27,9 +27,9 @@ If your helmfile uses environments, pass one:
 
 ## Things to check after conversion
 
-**Hostnames** — Ingress hostnames end up in the Caddy reverse proxy config. Make sure they resolve locally (`*.localhost` works on most systems, or add `/etc/hosts` entries).
+**Hostnames** — Your app's domain names end up in the Caddy reverse proxy config. Make sure they resolve locally (`*.localhost` works on most systems, or add `/etc/hosts` entries).
 
-**Secrets** — If a Secret wasn't in the rendered output, env vars that reference it are skipped (with a warning). Add missing values in `dekube.yaml` under `overrides:`, not in `compose.yml`.
+**Secrets** — If a secret value wasn't found during conversion, env vars that reference it are skipped (with a warning). Add missing values in `dekube.yaml` under `overrides:`, not in `compose.yml`.
 
 **Volume paths** — Persistent storage becomes bind mounts under `./data/`. Customize in `dekube.yaml` — the script reads it but never overwrites it.
 
@@ -45,9 +45,9 @@ docker compose up -d
 
 ## Want more control?
 
-Curious about what happened to your Deployments, ConfigMaps, and Ingresses? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down resource by resource.
+Want to understand what the script did with each part of your chart? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down step by step.
 
-kubernetes2simple decides everything for you. If you need to choose which extensions to load, exclude specific workloads, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the distribution for maintainers.
+kubernetes2simple decides everything for you. If you need to choose which extensions to load, exclude specific services, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the distribution for maintainers.
 
 ---
 
