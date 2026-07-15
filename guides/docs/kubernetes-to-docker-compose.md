@@ -1,6 +1,10 @@
+---
+description: "Convert Kubernetes manifests to a Docker Compose file — the reverse of Kompose. One command, no cluster, ideal for self-hosted and NAS setups."
+---
+
 # How to convert Kubernetes manifests to Docker Compose
 
-For the record: you should probably just run Kubernetes. On Linux, k3s is [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1). On macOS or Windows, Docker Desktop has an "Enable Kubernetes" checkbox. Your manifests work as-is.
+You have a folder of Kubernetes YAML — Deployments, Services, a ConfigMap — and no cluster to apply it to. For the record: if you did have one, running Kubernetes directly is probably simpler. On Linux, k3s is [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1). On macOS or Windows, Docker Desktop has an "Enable Kubernetes" checkbox. Your manifests work as-is.
 
 But you're here, so one of these is true:
 
@@ -9,6 +13,8 @@ But you're here, so one of these is true:
 - **Your platform only speaks Compose.** Your Synology, your TrueNAS, your hosting panel — it has a Compose field and nothing else.
 
 Either way — read on.
+
+This is the direct reverse of [Kompose](https://kompose.io/), Compose Bridge, and Move2Kube: they turn Docker Compose into Kubernetes manifests; this turns Kubernetes manifests into Docker Compose. If your source is a Helm chart rather than raw YAML, see [how to run a Helm chart without a cluster](https://k2s.dekube.io/guides/helm-chart-to-docker-compose/).
 
 ## Two commands
 

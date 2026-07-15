@@ -1,3 +1,7 @@
+---
+description: "Run a Kubernetes stack locally with Docker Compose: convert the helmfile, then use a compose.override.yml for hot reload without touching the chart."
+---
+
 # Local Kubernetes development with Docker Compose
 
 This guide is for developers who need to run a Kubernetes stack locally but don't maintain it themselves — someone else owns the helmfile, and you just need the thing running on your laptop.
@@ -59,6 +63,8 @@ docker compose up -d
 Want to understand what the script did with each part of your Kubernetes files? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down step by step.
 
 kubernetes2simple detects, downloads, and converts — you don't choose. If you need to pick extensions, exclude services, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the power-user distribution.
+
+If the project you're running locally is packaged as a Helm chart rather than a helmfile or raw manifests, see [how to run a Helm chart without a cluster](https://k2s.dekube.io/guides/helm-chart-to-docker-compose/) instead.
 
 ---
 
