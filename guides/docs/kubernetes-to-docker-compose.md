@@ -43,4 +43,4 @@ kubernetes2simple decides everything for you. If you need to pick which extensio
 
 > *"He who translates the celestial rites into common tongue does not simplify — he merely redistributes the suffering across a wider audience."*
 >
-> — *Necronomicon, On the Democratization of Forbidden Knowledge (trust me on this one)*
+> — *Necronomicon, On the Democratization of Forbidden Knowledge (word of mouth)*

@@ -22,7 +22,7 @@ The script detects what's in your directory — a helmfile, a Helm chart, or raw
 If your helmfile uses environments, pass one:
 
 ```bash
-./kubernetes2simple.sh --env dev
+./k2s.sh --env dev
 ```
 
 ## Things to check after conversion
@@ -39,7 +39,7 @@ The script is safe to re-run. `compose.yml` and `Caddyfile` are regenerated. `de
 
 ```bash
 # After chart changes, just re-run
-./kubernetes2simple.sh --env dev
+./k2s.sh --env dev
 docker compose up -d
 ```
 
@@ -53,4 +53,4 @@ kubernetes2simple decides everything for you. If you need to choose which extens
 
 > *"The scribe who copied the great hymns into the lesser tongue believed himself a translator. He was, in truth, the first heretic — for to render the sacred in the mundane is to declare that the mundane was always sufficient."*
 >
-> — *Necronomicon, On the Heresy of Helm Template (unverified)*
+> — *Necronomicon, On the Heresy of Helm Template (unconfirmed)*

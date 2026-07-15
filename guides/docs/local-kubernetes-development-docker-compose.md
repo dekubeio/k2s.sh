@@ -48,7 +48,7 @@ Docker Compose merges both files automatically. Your code runs inside the full s
 When your Helm charts or manifests change, re-run the script:
 
 ```bash
-./kubernetes2simple.sh --env dev
+./k2s.sh --env dev
 docker compose up -d
 ```
 
@@ -64,4 +64,4 @@ kubernetes2simple detects, downloads, and converts — you don't choose. If you 
 
 > *"And in the lesser realms they built a mirror of the temple — smaller, simpler, and mercifully free of the admission controller that had plagued the original congregation."*
 >
-> — *Necronomicon, On the Virtues of Downscaling (probably⁴)*
+> — *Necronomicon, On the Virtues of Downscaling (probably⁵)*
