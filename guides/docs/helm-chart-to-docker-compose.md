@@ -71,7 +71,7 @@ curl -fsSL k2s.dekube.io/get | bash
 docker compose up -d
 ```
 
-k2s renders the chart with `helm template release .` — the release name (`release`) prefixes every resource it creates — then converts the result. So the chart's `rustfs` deployment comes out as a `release-rustfs` service in `compose.yml`, next to a `release-rustfs-init-init-step` init job and a `release-rustfs-test-connection` probe carried over from the chart's Helm test hook, plus the `fix-permissions` and `caddy` helper services k2s adds on its own. Data and logs land in bind mounts at `./data/release-rustfs-data` and `./data/release-rustfs-logs`.
+k2s renders the chart with `helm template release .` — the release name (`release`) prefixes every resource it creates — then converts the result. So the chart's `rustfs` deployment comes out as a `release-rustfs` service in `compose.yml`, next to a `release-rustfs-init-init-step` init job (the doubled name is the chart's own, copied verbatim) and a `release-rustfs-test-connection` probe carried over from the chart's Helm test hook, plus the `fix-permissions` and `caddy` helper services k2s adds on its own. Data and logs land in bind mounts at `./data/release-rustfs-data` and `./data/release-rustfs-logs`.
 
 The Ingress *is* converted: k2s writes a `Caddyfile` with a `rustfs.localhost` block reverse-proxying to the console port inside the compose network:
 
@@ -109,7 +109,7 @@ kubernetes2simple decides everything for you. If you need to choose which extens
 
 ## FAQ
 
-### Can I run a Helm chart without Kubernetes?
+### Can I run a Helm chart without a cluster?
 
 Yes. kubernetes2simple renders the chart with helm template and converts the manifests to a Docker Compose file. No cluster or control plane is needed.
 
@@ -119,19 +119,19 @@ Charts are not self-contained: many require values such as credentials or a host
 
 ### Is this the opposite of Kompose?
 
-Yes. Kompose, Compose Bridge, and Move2Kube convert Docker Compose to Kubernetes. dekube converts the other way — Helm charts and Kubernetes manifests to Docker Compose.
+Yes, in the opposite direction. This page covers Helm charts; for raw Kubernetes manifests, the manifests guide handles the same conversion. Either way the output is a Docker Compose file, not a cluster.
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Can I run a Helm chart without Kubernetes?",
+    { "@type": "Question", "name": "Can I run a Helm chart without a cluster?",
       "acceptedAnswer": { "@type": "Answer", "text": "Yes. kubernetes2simple renders the chart with helm template and converts the manifests to a Docker Compose file. No cluster or control plane is needed." } },
     { "@type": "Question", "name": "Why won't my Helm chart render on its own?",
       "acceptedAnswer": { "@type": "Answer", "text": "Charts are not self-contained: many require values such as credentials or a hostname, and some default to multi-node modes. Supply a minimal values.yaml, as shown with rustfs above." } },
     { "@type": "Question", "name": "Is this the opposite of Kompose?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Kompose, Compose Bridge, and Move2Kube convert Docker Compose to Kubernetes. dekube converts the other way — Helm charts and Kubernetes manifests to Docker Compose." } }
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, in the opposite direction. This page covers Helm charts; for raw Kubernetes manifests, the manifests guide handles the same conversion. Either way the output is a Docker Compose file, not a cluster." } }
   ]
 }
 </script>
