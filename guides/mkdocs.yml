@@ -28,6 +28,7 @@ theme:
     - search.suggest
 
 nav:
+  - Getting started: index.md
   - Kubernetes to Docker Compose: kubernetes-to-docker-compose.md
   - Helm chart to Docker Compose: helm-chart-to-docker-compose.md
   - Local development with Docker Compose: local-kubernetes-development-docker-compose.md

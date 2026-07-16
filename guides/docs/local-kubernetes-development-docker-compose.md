@@ -10,14 +10,14 @@ If that's you: **send the [helmfile2compose getting started](https://helmfile2co
 
 That said, here's how to get going right now.
 
-## Two commands
+## Get it running
 
 ```bash
 curl -fsSL k2s.dekube.io/get | bash
 docker compose up -d
 ```
 
-No global installs. Everything goes into `.kubernetes2simple/`. The script produces `compose.yml`, `Caddyfile`, and `dekube.yaml`.
+That's the whole install — see [Getting started](index.md) for what lands on disk and how to re-run after the charts change. If the project is packaged as a Helm chart rather than a helmfile or raw manifests, follow [how to run a Helm chart without a cluster](helm-chart-to-docker-compose.md) instead.
 
 ## Day-to-day
 
@@ -46,25 +46,6 @@ services:
 ```
 
 Docker Compose merges both files automatically. Your code runs inside the full stack — same databases, same queues, same reverse proxy — with changes reflected immediately. When you re-run the conversion, `compose.override.yml` is yours and never overwritten.
-
-## Re-generating after changes
-
-When your Helm charts or manifests change, re-run the script:
-
-```bash
-./k2s.sh --env dev
-docker compose up -d
-```
-
-`dekube.yaml` is preserved. Only `compose.yml` and `Caddyfile` are regenerated.
-
-## Want more control?
-
-Want to understand what the script did with each part of your Kubernetes files? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down step by step.
-
-kubernetes2simple detects, downloads, and converts — you don't choose. If you need to pick extensions, exclude services, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the power-user distribution.
-
-If the project you're running locally is packaged as a Helm chart rather than a helmfile or raw manifests, see [how to run a Helm chart without a cluster](https://k2s.dekube.io/guides/helm-chart-to-docker-compose/) instead.
 
 ---
 

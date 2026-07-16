@@ -4,46 +4,28 @@ description: "Convert Kubernetes manifests to a Docker Compose file — the reve
 
 # How to convert Kubernetes manifests to Docker Compose
 
-You have a folder of Kubernetes YAML — Deployments, Services, a ConfigMap — and no cluster to apply it to. For the record: if you did have one, running Kubernetes directly is probably simpler. On Linux, k3s is [one script](https://gist.github.com/baptisterajaut/089d4fad018129c431b675d9ef76e9d1). On macOS or Windows, Docker Desktop has an "Enable Kubernetes" checkbox. Your manifests work as-is.
+You have a folder of Kubernetes YAML — Deployments, Services, a ConfigMap — and no cluster to apply it to. kubernetes2simple converts it to a working Docker Compose setup in one command.
 
-But you're here, so one of these is true:
+This is the direct reverse of [Kompose](https://kompose.io/), Compose Bridge, and Move2Kube: they turn Docker Compose into Kubernetes manifests; this turns Kubernetes manifests into Docker Compose. If your source is a Helm chart rather than raw YAML, see [how to run a Helm chart without a cluster](helm-chart-to-docker-compose.md).
 
-- **You don't want to learn Kubernetes.** You want to add an app to your NAS or VPS the same way you added Plex or Immich — paste a compose file, done. I'm not saying I agree, but this is the reason this project exists.
-- **You can't be root.** Corporate policy says Podman rootless, no sudo, no systemd. k3s needs root. Compose is what you've got.
-- **Your platform only speaks Compose.** Your Synology, your TrueNAS, your hosting panel — it has a Compose field and nothing else.
-
-Either way — read on.
-
-This is the direct reverse of [Kompose](https://kompose.io/), Compose Bridge, and Move2Kube: they turn Docker Compose into Kubernetes manifests; this turns Kubernetes manifests into Docker Compose. If your source is a Helm chart rather than raw YAML, see [how to run a Helm chart without a cluster](https://k2s.dekube.io/guides/helm-chart-to-docker-compose/).
-
-## Two commands
-
-kubernetes2simple is a shell script. Point it at a directory containing Kubernetes YAML files, a Helm chart, or a helmfile, and it handles everything — detecting the project type, downloading any missing tools, and converting:
+## Convert it
 
 ```bash
 curl -fsSL k2s.dekube.io/get | bash
 docker compose up -d
 ```
 
-All downloaded tools go into `.kubernetes2simple/`. Your system stays clean. You get a `compose.yml`, a `Caddyfile` for reverse proxying, and a `dekube.yaml` for customization.
+The script detects that the directory holds raw Kubernetes manifests and converts them directly — no `helm template` step, no cluster. You get a `compose.yml`, a `Caddyfile`, and a `dekube.yaml`.
 
-## Things to check after conversion
+New here? [Getting started](index.md) covers install, the post-conversion checklist (hostnames, secrets, volume paths), and re-running — all of which apply here.
 
-**Hostnames** — Your app's domain names end up in the Caddy reverse proxy config. Make sure they resolve locally (`*.localhost` works on most systems, or add `/etc/hosts` entries).
+## What raw manifests map to
 
-**Secrets** — If a secret value wasn't found during conversion, env vars that reference it are skipped (with a warning). Add missing values in `dekube.yaml` under `overrides:`, not in `compose.yml`.
-
-**Volume paths** — Persistent storage becomes bind mounts under `./data/`. Customize in `dekube.yaml` — the script reads it but never overwrites it.
-
-## Re-running
-
-The script is safe to re-run. `compose.yml` and `Caddyfile` are regenerated. `dekube.yaml` is preserved — your volume paths, excludes, and overrides survive.
+Each Kubernetes kind becomes its Compose equivalent: a Deployment or StatefulSet becomes a service, a Service becomes network aliases on the compose network, a PersistentVolumeClaim becomes a bind mount under `./data/`, an Ingress becomes a reverse-proxy block in the `Caddyfile`, and ConfigMaps and Secrets become mounted files or env vars. A `dekube.yaml` is written alongside so you can override any of it without editing the generated files.
 
 ## Want more control?
 
-Want to understand what the script did with each part of your Kubernetes files? [How the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/) breaks it down step by step.
-
-kubernetes2simple decides everything for you. If you need to pick which extensions to load, exclude services, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the distribution for people who want full control.
+kubernetes2simple decides everything for you. If you need to pick which extensions to load, exclude services, or embed the conversion in CI, [helmfile2compose](https://helmfile2compose.dekube.io/docs/getting-started/) is the distribution for people who want full control. To see how each Kubernetes kind is handled, read [how the conversion works](https://helmfile2compose.dekube.io/docs/how-conversion-works/).
 
 ---
 
