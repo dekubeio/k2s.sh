@@ -137,7 +137,9 @@
 
   <div class="faq-item">
     <h3>My project uses Helmfile environments</h3>
-    <p>Pass <code>--env &lt;name&gt;</code> to select one. Pick the environment
+    <p>Pass <code>--env &lt;name&gt;</code> to select one. On the first run, forward it
+    through the installer: <code>curl -fsSL k2s.dekube.io/get | bash -s -- --env dev</code>.
+    Afterwards, re-run <code>./k2s.sh --env &lt;name&gt;</code> directly. Pick the environment
     closest to dev or demo.</p>
   </div>
 

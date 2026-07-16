@@ -27,7 +27,13 @@ docker compose up -d
 
 All downloaded tools go into `.kubernetes2simple/`. Your system stays clean. You get a `compose.yml`, a `Caddyfile`, and a `dekube.yaml`.
 
-If your helmfile uses environments, pass one:
+If your helmfile uses environments, pass one. On the first run, forward it through the installer — arguments after `--` are passed straight to the script:
+
+```bash
+curl -fsSL k2s.dekube.io/get | bash -s -- --env dev
+```
+
+Once `./k2s.sh` is on disk, re-run it directly:
 
 ```bash
 ./k2s.sh --env dev
